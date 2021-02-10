@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const { sequelize } = require('./models/index.js');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -38,4 +39,13 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+(async () => {
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync();
+    console.log("YEEEE!!");
+  } catch {
+    console.log('shit, this aint cool');
+  }
+})();
 module.exports = app;
