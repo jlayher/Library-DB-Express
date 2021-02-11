@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+
+//require sequelize
 const { sequelize } = require('./models/index.js');
 
 var indexRouter = require('./routes/index');
@@ -10,6 +12,19 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+// set static to public
+app.use(express.static(path.join(__dirname, 'public')));
+
+//async IIFE
+(async () => {
+  await sequelize.sync();
+  try {
+    await sequelize.authenticate();
+    console.log("Connection to DB Went GOOOOD");
+  } catch (error){
+    console.log("Connection to DB Failed...  Poopy", error);
+  }
+})
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
