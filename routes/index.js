@@ -18,13 +18,74 @@ function asyncHandler(callback){
 }
 
 /* GET home page. */
-router.get('/', asyncHandler(async (req, res, next) => {
-  const books = await Book.findAll();
-  console.log(books);
-  res.json(books);
-  //res.render('index', { title: 'Express' });
+router.get('/', asyncHandler(async (req, res) => {
+  res.redirect('/books');
 }));
 
+/* GET books page, shows full list of books*/
+router.get('/books', asyncHandler(async (req, res) => {
+  const books = await Book.findAll();
+  res.render('index', {books, title: 'Books'});
+}));
 
+/* GET new-book page, shows the create new book form*/
+router.get('/books/new', (req, res) => {
+  res.render('new-book', {book: {}, title: "New Book"});
+});
+
+/* POST New Book, posts a new book to the database*/
+router.post('/books/new', asyncHandler(async(req, res) => {
+  let book;
+  try{
+    book = await Book.create(req.body);
+    res.redirect("/books");
+  } catch (error) {
+    if(error.name === 'SequelizeValidationError') {
+      const errors = error.errors.map(err => err.message)
+      res.render('new-book', {errors, book, title: "New Book"});
+    } else {
+      throw error;
+    }
+  }
+}));
+
+/* GET books/:id page, renders book deatil form*/
+router.get('books/:id', asyncHandler(async(req, res) => {
+  const book = await Book.findByPk(req.params.id);
+  res.render('update-book', {book, title: book.title});
+}))
+
+/* POST /books/:id, updates book info in the database*/
+router.post('/books/new', asyncHandler(async(req, res) => {
+  const book;
+  try{
+    book = await Book.create(req.body);
+    res.redirect("/books");
+  } catch (error) {
+    if(error.name === 'SequelizeValidationError') {
+      const errors = error.errors.map(err => err.message)
+      res.render('update-book', {errors, book, title: book.title});
+    } else {
+      throw error;
+    }
+  }
+}));
+
+/* POST /books/:id/delete, deletes a book*/
+//!!! CREATE A TEST BOOK TO TEST DELETION!!!  DELETION CAN'T BE UNDONE!!!!
+router.post('/books/:id/delete', asyncHandler(async(req, res) => {
+  const book = await Book.findByPk(req.params.id);
+  await book.destroy();
+  res.redirect('/books');
+}))
 
 module.exports = router;
+
+// home route test
+// router.get('/', asyncHandler(async (req, res, next) => {
+//   const books = await Book.findAll();
+//   console.log(books);
+//   res.json(books);
+// }));
+
+
