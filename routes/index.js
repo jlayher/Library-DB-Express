@@ -57,7 +57,7 @@ router.get('books/:id', asyncHandler(async(req, res) => {
 
 /* POST /books/:id, updates book info in the database*/
 router.post('/books/new', asyncHandler(async(req, res) => {
-  const book;
+  let book;
   try{
     book = await Book.create(req.body);
     res.redirect("/books");
