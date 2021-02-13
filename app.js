@@ -17,9 +17,6 @@ const errorHandlers = require('./errorHandlers');
 
 var app = express();
 
-// set static to public
-app.use(express.static(path.join(__dirname, 'public')));
-
 //async IIFE
 (async () => {
   await sequelize.sync();
