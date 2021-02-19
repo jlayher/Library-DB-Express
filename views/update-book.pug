@@ -3,6 +3,7 @@ extends layout
 block content 
     h1 Update Book 
     form(method="post" action=`/books/${book.id}`)
+        include form-error 
         p 
             label(for="title") Title 
             input(name="title" type="text" id="title" value=`${book.title}`)

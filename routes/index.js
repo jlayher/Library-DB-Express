@@ -81,11 +81,3 @@ router.post('/books/:id/delete', asyncHandler(async(req, res) => {
 
 module.exports = router;
 
-// home route test
-// router.get('/', asyncHandler(async (req, res, next) => {
-//   const books = await Book.findAll();
-//   console.log(books);
-//   res.json(books);
-// }));
-
-

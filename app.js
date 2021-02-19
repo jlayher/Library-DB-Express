@@ -22,9 +22,9 @@ var app = express();
   await sequelize.sync();
   try {
     await sequelize.authenticate();
-    console.log("Connection to DB Went GOOOOD");
+    console.log("Connection to DB Worked!");
   } catch (error){
-    console.log("Connection to DB Failed...  Poopy", error);
+    console.log("Connection to DB Failed...", error);
   }
 })();
 // view engine setup
@@ -47,34 +47,3 @@ app.use(errorHandlers.fourOhFour);
 app.use(errorHandlers.globalError);
 
 module.exports = app;
-
-
-
-
-
-
-// // catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-//   next(createError(404));
-// });
-
-// // error handler
-// app.use(function(err, req, res, next) {
-//   // set locals, only providing error in development
-//   res.locals.message = err.message;
-//   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-//   // render the error page
-//   res.status(err.status || 500);
-//   res.render('error');
-// });
-
-// (async () => {
-//   try {
-//     await sequelize.authenticate();
-//     await sequelize.sync();
-//     console.log("YEEEE!!");
-//   } catch {
-//     console.log('shit, this aint cool');
-//   }
-// })();
