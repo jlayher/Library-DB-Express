@@ -11,6 +11,7 @@ block content
     a(class="button" href="/books/new") Create New Book 
     br
     br
+  if books.length > 0  
     table   
       thead   
         tr 
@@ -26,3 +27,6 @@ block content
             td= book.author 
             td= book.genre 
             td= book.year
+    include paginate 
+  else  
+    p  The Search Returned No Results

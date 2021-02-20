@@ -5,8 +5,10 @@ var router = express.Router();
 const { Book } = require('../models');
 
 //import sequelize comparison operators
-const { Op } = require("sequelize");
+const { Op } = require('sequelize');
 
+//import express-paginate
+const paginate = require('express-paginate');
 
 // Handler Function for Async Functions
 function asyncHandler(callback){
@@ -31,7 +33,7 @@ router.get('/books', asyncHandler(async (req, res) => {
   const search = req.query.search;
   let books;
   if(search) {
-    books = await Book.findAll({
+    books = await Book.findAndCountAll({
       where: {
         [Op.or]: [
           {
@@ -55,12 +57,25 @@ router.get('/books', asyncHandler(async (req, res) => {
             }
           } 
         ]
-      }
-    })
+      },
+      limit: req.query.limit,
+      offset: req.skip
+    });
   } else {
-    books = await Book.findAll();
+    books = await Book.findAndCountAll({
+      limit: req.query.limit,
+      offset: req.skip
+    });
   }
-  res.render('index', {books, title: 'Books'});
+  const bookCount = books.count;
+  const pageCount = Math.ceil(books.count / req.query.limit);
+  res.render('index', {
+    books, 
+    title: 'Books',
+    bookCount,
+    pageCount,
+    pages: paginate.getArrayPages(req)(5, pageCount, req.query.page)
+  });
 }));
 
 // /* GET books page, shows full list of books*/
