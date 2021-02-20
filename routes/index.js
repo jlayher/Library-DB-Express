@@ -4,6 +4,9 @@ var router = express.Router();
 //import the Book model from the ../models folder
 const { Book } = require('../models');
 
+//import sequelize comparison operators
+const { Op } = require("sequelize");
+
 
 // Handler Function for Async Functions
 function asyncHandler(callback){
@@ -22,11 +25,49 @@ router.get('/', asyncHandler(async (req, res) => {
   res.redirect('/books');
 }));
 
-/* GET books page, shows full list of books*/
+//Exceeds Requirement:  Search 
+/* GET books page with search results */
 router.get('/books', asyncHandler(async (req, res) => {
-  const books = await Book.findAll();
+  const search = req.query.search;
+  let books;
+  if(search) {
+    books = await Book.findAll({
+      where: {
+        [Op.or]: [
+          {
+            title: {
+              [Op.like]: `%${search}%`
+            }
+          },
+            {
+            author: {
+              [Op.like]: `%${search}%`
+            }
+          },
+            {
+            genre: {
+              [Op.like]: `%${search}%`
+            }
+          },
+            {
+            year: {
+              [Op.like]: `%${search}%`
+            }
+          } 
+        ]
+      }
+    })
+  } else {
+    books = await Book.findAll();
+  }
   res.render('index', {books, title: 'Books'});
 }));
+
+// /* GET books page, shows full list of books*/
+// router.get('/books', asyncHandler(async (req, res) => {
+//   const books = await Book.findAll();
+//   res.render('index', {books, title: 'Books'});
+// }));
 
 /* GET new-book page, shows the create new book form*/
 router.get('/books/new', (req, res) => {

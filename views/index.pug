@@ -2,8 +2,15 @@ extends layout
 
 block content
   h1= title
-  p #{title}: 
+  p 
+    form(action='/books' method='get')
+      label(for='search') Search For Books:
+      input(name='search' type='text' id='search')
+      button Search
+    br
     a(class="button" href="/books/new") Create New Book 
+    br
+    br
     table   
       thead   
         tr 
