@@ -8,7 +8,7 @@ const { Book } = require('../models');
 const { Op } = require('sequelize');
 
 //import express-paginate
-const paginate = require('express-paginate');
+//const paginate = require('express-paginate');
 
 //why is this here??
 //const { query } = require('express');
@@ -39,7 +39,7 @@ router.get('/books', asyncHandler(async (req, res, next) => {
   let books;
   let bookCount;
   if(search) {
-    books = await Book.findAndCountAll({  //findAndCountAll
+    books = await Book.findAndCountAll({  
       where: {
         [Op.or]: [
           {
@@ -65,12 +65,12 @@ router.get('/books', asyncHandler(async (req, res, next) => {
         ]
       },
       limit: 5,
-      offset: 0,
+      offset: req.skip,
     })
   } else {
     books = await Book.findAndCountAll({
       limit: 5,
-      offset: 0
+      offset: req.skip
     });
   }
   bookCount = books.count;
@@ -84,27 +84,10 @@ router.get('/books', asyncHandler(async (req, res, next) => {
     books: books.rows,
     pageCount,
     bookCount,
-    pages: paginate.getArrayPages(req)(5, pageCount, 1) 
   });
 }));
 
-//   } else {
-//     books = await Book.findAndCountAll({
-//       limit: 5,
-//       offset: req.skip,
-//     });
-//   }
-//   const bookCount = books.count;
-//   const pageCount = Math.ceil(books.count / req.query.limit);
-//   console.log(req.query);
-//   res.render('index', {
-//     books, 
-//     title: 'Books',
-//     bookCount,
-//     pageCount,
-//     pages: paginate.getArrayPages(req)(5, pageCount, req.query.page) //issue seems to be coming from here.  
-//   });
-// }));
+
 
 // /* GET books page, shows full list of books*/
 // router.get('/books', asyncHandler(async (req, res) => {
