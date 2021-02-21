@@ -10,6 +10,9 @@ const { Op } = require('sequelize');
 //import express-paginate
 const paginate = require('express-paginate');
 
+//why is this here??
+const { query } = require('express');
+
 // Handler Function for Async Functions
 function asyncHandler(callback){
   return async(req, res, next) => {
@@ -30,6 +33,7 @@ router.get('/', asyncHandler(async (req, res) => {
 //Exceeds Requirement:  Search 
 /* GET books page with search results */
 router.get('/books', asyncHandler(async (req, res) => {
+  console.log(req);
   const search = req.query.search;
   let books;
   if(search) {
@@ -60,20 +64,20 @@ router.get('/books', asyncHandler(async (req, res) => {
       },
       limit: req.query.limit,
       offset: req.skip,
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
+      page: req.query.page
     });
   } else {
     books = await Book.findAndCountAll({
-      limit: req.query.limit,
+      limit: 5,
       offset: req.skip,
-      order: [['createdAt', 'DESC']]
     });
   }
   const bookCount = books.count;
   const pageCount = Math.ceil(books.count / req.query.limit);
   console.log(req.query);
   res.render('index', {
-    books: books.rows, 
+    books, 
     title: 'Books',
     bookCount,
     pageCount,
