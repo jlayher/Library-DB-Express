@@ -8,10 +8,10 @@ const { Book } = require('../models');
 const { Op } = require('sequelize');
 
 //import express-paginate
-const paginate = require('express-paginate');
+//const paginate = require('express-paginate');
 
 //why is this here??
-const { query } = require('express');
+//const { query } = require('express');
 
 // Handler Function for Async Functions
 function asyncHandler(callback){
@@ -26,18 +26,19 @@ function asyncHandler(callback){
 }
 
 /* GET home page. */
-router.get('/', asyncHandler(async (req, res) => {
+router.get('/', asyncHandler(async (req, res, next) => {
+  //const books = await Book.findAll();
   res.redirect('/books');
 }));
 
 //Exceeds Requirement:  Search 
 /* GET books page with search results */
-router.get('/books', asyncHandler(async (req, res) => {
-  console.log(req);
+router.get('/books', asyncHandler(async (req, res, next) => {
+  //console.log(req);
   const search = req.query.search;
   let books;
   if(search) {
-    books = await Book.findAndCountAll({
+    books = await Book.findAll({  //findAndCountAll
       where: {
         [Op.or]: [
           {
@@ -62,28 +63,36 @@ router.get('/books', asyncHandler(async (req, res) => {
           } 
         ]
       },
-      limit: req.query.limit,
-      offset: req.skip,
-      order: [['createdAt', 'DESC']],
-      page: req.query.page
-    });
-  } else {
-    books = await Book.findAndCountAll({
       limit: 5,
-      offset: req.skip,
-    });
+      offset: 0,
+    })
+  } else {
+    books = await Book.findAll();
   }
-  const bookCount = books.count;
-  const pageCount = Math.ceil(books.count / req.query.limit);
-  console.log(req.query);
-  res.render('index', {
-    books, 
-    title: 'Books',
-    bookCount,
-    pageCount,
-    pages: paginate.getArrayPages(req)(5, pageCount, req.query.page) //issue seems to be coming from here.  
+  console.log(search);
+  res.render('index', { 
+  books,
+  title: 'Books', 
   });
 }));
+
+//   } else {
+//     books = await Book.findAndCountAll({
+//       limit: 5,
+//       offset: req.skip,
+//     });
+//   }
+//   const bookCount = books.count;
+//   const pageCount = Math.ceil(books.count / req.query.limit);
+//   console.log(req.query);
+//   res.render('index', {
+//     books, 
+//     title: 'Books',
+//     bookCount,
+//     pageCount,
+//     pages: paginate.getArrayPages(req)(5, pageCount, req.query.page) //issue seems to be coming from here.  
+//   });
+// }));
 
 // /* GET books page, shows full list of books*/
 // router.get('/books', asyncHandler(async (req, res) => {

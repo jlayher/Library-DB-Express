@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h1= title
+  h1 Books
   p 
     form(action='/books' method='get')
       label(for='search') Search For Books:
@@ -27,6 +27,7 @@ block content
             td= book.author 
             td= book.genre 
             td= book.year
-    include paginate 
+    //- include paginate 
   else  
     p  The Search Returned No Results
+    a(class="button", href="/") Back to the "Books" Page
