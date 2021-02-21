@@ -28,6 +28,10 @@ block content
             td= book.genre 
             td= book.year
     //include paginate 
+    ul 
+      if pageCount > 0
+        each page in pageCount 
+          a(class="button")
   else  
     p  The Search Returned No Results
     a(class="button", href="/") Back to the "Books" Page

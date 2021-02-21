@@ -74,11 +74,12 @@ router.get('/books', asyncHandler(async (req, res, next) => {
     });
   }
   bookCount = books.count;
-  pageCount = Math.ceil(bookCount / req.query.limit);
+  pageCount = Math.ceil(bookCount / 5);
   //logs
   console.log(books);
   console.log(search);
   console.log(bookCount);
+  console.log(pageCount);
 
   res.render('index', { 
     books: books.rows,
