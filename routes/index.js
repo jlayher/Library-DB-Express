@@ -8,7 +8,7 @@ const { Book } = require('../models');
 const { Op } = require('sequelize');
 
 //import express-paginate
-//const paginate = require('express-paginate');
+const paginate = require('express-paginate');
 
 //why is this here??
 //const { query } = require('express');
@@ -37,8 +37,9 @@ router.get('/books', asyncHandler(async (req, res, next) => {
   //console.log(req);
   const search = req.query.search;
   let books;
+  let bookCount;
   if(search) {
-    books = await Book.findAll({  //findAndCountAll
+    books = await Book.findAndCountAll({  //findAndCountAll
       where: {
         [Op.or]: [
           {
@@ -67,12 +68,23 @@ router.get('/books', asyncHandler(async (req, res, next) => {
       offset: 0,
     })
   } else {
-    books = await Book.findAll();
+    books = await Book.findAndCountAll({
+      limit: 5,
+      offset: 0
+    });
   }
+  bookCount = books.count;
+  pageCount = Math.ceil(bookCount / req.query.limit);
+  //logs
+  console.log(books);
   console.log(search);
+  console.log(bookCount);
+
   res.render('index', { 
-  books,
-  title: 'Books', 
+    books: books.rows,
+    pageCount,
+    bookCount,
+    pages: paginate.getArrayPages(req)(5, pageCount, 1) 
   });
 }));
 
