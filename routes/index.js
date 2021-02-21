@@ -59,22 +59,25 @@ router.get('/books', asyncHandler(async (req, res) => {
         ]
       },
       limit: req.query.limit,
-      offset: req.skip
+      offset: req.skip,
+      order: [['createdAt', 'DESC']]
     });
   } else {
     books = await Book.findAndCountAll({
       limit: req.query.limit,
-      offset: req.skip
+      offset: req.skip,
+      order: [['createdAt', 'DESC']]
     });
   }
   const bookCount = books.count;
   const pageCount = Math.ceil(books.count / req.query.limit);
+  console.log(req.query);
   res.render('index', {
-    books, 
+    books: books.rows, 
     title: 'Books',
     bookCount,
     pageCount,
-    pages: paginate.getArrayPages(req)(5, pageCount, req.query.page)
+    pages: paginate.getArrayPages(req)(5, pageCount, req.query.page) //issue seems to be coming from here.  
   });
 }));
 
