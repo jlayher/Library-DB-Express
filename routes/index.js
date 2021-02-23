@@ -38,6 +38,9 @@ router.get('/books', asyncHandler(async (req, res, next) => {
   const search = req.query.search;
   let books;
   let bookCount;
+  let page = req.query.page || 1;
+  console.log(page);
+
   if(search) {
     books = await Book.findAndCountAll({  
       where: {
@@ -65,26 +68,30 @@ router.get('/books', asyncHandler(async (req, res, next) => {
         ]
       },
       limit: 5,
-      offset: req.skip,
+      offset: page*5 -5,
+      page,
     })
   } else {
     books = await Book.findAndCountAll({
       limit: 5,
-      offset: req.skip
+      offset: page*5 -5,
+      page,
     });
   }
   bookCount = books.count;
   pageCount = Math.ceil(bookCount / 5);
   //logs
-  console.log(books);
+  //console.log(books);
   console.log(search);
   console.log(bookCount);
   console.log(pageCount);
+  console.log(page);
 
   res.render('index', { 
     books: books.rows,
     pageCount,
     bookCount,
+    page
   });
 }));
 

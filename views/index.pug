@@ -27,11 +27,17 @@ block content
             td= book.author 
             td= book.genre 
             td= book.year
-    //include paginate 
-    ul 
-      if pageCount > 0
-        each page in pageCount 
-          a(class="button")
+    - var i = page;
+    - var j = pageCount;
+    if page > 1
+      a(href=`/books/?page=${--page}`) Previous Page 
+    if i < j 
+      - ++i 
+      a(href=`/books/?page=${i}`)  Next Page
+      //- ul 
+      //- while i < pageCount + 1
+      //-   li.link-list-item 
+      //-     a.page-links(href=`/books/?page=${i-1}`)=i++
   else  
     p  The Search Returned No Results
     a(class="button", href="/") Back to the "Books" Page
