@@ -6,7 +6,6 @@ const fourOhFour = (req, res, next) => {
     const err = new Error();
     err.status = 404;
     err.message = "A 404 Error Occured!  The webpage could not be found!";
-    //res.render('page-not-found', {err, title: "404.  Page Not Found"});
     next(err);
 }
 

@@ -7,12 +7,6 @@ const { Book } = require('../models');
 //import sequelize comparison operators
 const { Op } = require('sequelize');
 
-//import express-paginate
-//const paginate = require('express-paginate');
-
-//why is this here??
-//const { query } = require('express');
-
 // Handler Function for Async Functions
 function asyncHandler(callback){
   return async(req, res, next) => {
@@ -27,19 +21,16 @@ function asyncHandler(callback){
 
 /* GET home page. */
 router.get('/', asyncHandler(async (req, res, next) => {
-  //const books = await Book.findAll();
   res.redirect('/books');
 }));
 
 //Exceeds Requirement:  Search 
 /* GET books page with search results */
 router.get('/books', asyncHandler(async (req, res, next) => {
-  //console.log(req);
   const search = req.query.search;
   let books;
   let bookCount;
   const page = req.query.page || 1;
-  console.log(page);
 
   if(search) {
     books = await Book.findAndCountAll({  
@@ -70,7 +61,6 @@ router.get('/books', asyncHandler(async (req, res, next) => {
       limit: 5,
       offset: page * 5 - 5,
       page,
-      //search,
     })
     bookCount = books.count;
     pageCount = Math.ceil(bookCount / 5);
@@ -78,14 +68,12 @@ router.get('/books', asyncHandler(async (req, res, next) => {
     books = await Book.findAndCountAll({
       limit: 5,
       offset: page*5 -5,
-      //page,
-      //search,
     });
   }
   bookCount = books.count;
   pageCount = Math.ceil(bookCount / 5);
+  
   //logs
-  //console.log(books);
   console.log(search);
   console.log(bookCount);
   console.log(pageCount);

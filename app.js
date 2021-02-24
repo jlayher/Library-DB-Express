@@ -9,9 +9,6 @@ const { sequelize } = require('./models/index.js');
 
 var indexRouter = require('./routes/index');
 
-// DO I NEED THIS??
-var usersRouter = require('./routes/users');
-
 //require error handlers
 const errorHandlers = require('./errorHandlers');
 
@@ -38,9 +35,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-
-// DO I NEED THIS
-app.use('/users', usersRouter);
 
 // Error Handlers
 app.use(errorHandlers.fourOhFour);
