@@ -38,7 +38,7 @@ router.get('/books', asyncHandler(async (req, res, next) => {
   const search = req.query.search;
   let books;
   let bookCount;
-  let page = req.query.page || 1;
+  const page = req.query.page || 1;
   console.log(page);
 
   if(search) {
@@ -68,14 +68,18 @@ router.get('/books', asyncHandler(async (req, res, next) => {
         ]
       },
       limit: 5,
-      offset: page*5 -5,
+      offset: page * 5 - 5,
       page,
+      //search,
     })
+    bookCount = books.count;
+    pageCount = Math.ceil(bookCount / 5);
   } else {
     books = await Book.findAndCountAll({
       limit: 5,
       offset: page*5 -5,
-      page,
+      //page,
+      //search,
     });
   }
   bookCount = books.count;
@@ -91,17 +95,10 @@ router.get('/books', asyncHandler(async (req, res, next) => {
     books: books.rows,
     pageCount,
     bookCount,
-    page
+    page,
+    search
   });
 }));
-
-
-
-// /* GET books page, shows full list of books*/
-// router.get('/books', asyncHandler(async (req, res) => {
-//   const books = await Book.findAll();
-//   res.render('index', {books, title: 'Books'});
-// }));
 
 /* GET new-book page, shows the create new book form*/
 router.get('/books/new', (req, res) => {
@@ -147,7 +144,6 @@ router.post('/books/:id', asyncHandler(async(req, res) => {
 }));
 
 /* POST /books/:id/delete, deletes a book*/
-//!!! CREATE A TEST BOOK TO TEST DELETION!!!  DELETION CAN'T BE UNDONE!!!!
 router.post('/books/:id/delete', asyncHandler(async(req, res) => {
   const book = await Book.findByPk(req.params.id);
   await book.destroy();

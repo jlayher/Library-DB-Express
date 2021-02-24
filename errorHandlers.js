@@ -6,7 +6,8 @@ const fourOhFour = (req, res, next) => {
     const err = new Error();
     err.status = 404;
     err.message = "A 404 Error Occured!  The webpage could not be found!";
-    res.render('page-not-found', {err, title: "404.  Page Not Found"});
+    //res.render('page-not-found', {err, title: "404.  Page Not Found"});
+    next(err);
 }
 
 //Global Error Handler
@@ -15,7 +16,7 @@ const globalError = (err, req, res, next) => {
         res.render('page-not-found', {err, title: "404.  Page Not Found"});  
     } else {
         err.status = err.status || 500;
-        err.message = err.message || "A Server Error Occurred!";
+        err.message = `A Server Error Occured! ${err.message}` || "A Server Error Occurred!";
         console.log(`Error Status: ${err.status}`, `Error Message: ${err.message}`);      
         res.render('error', {err});
         return err;
