@@ -8,8 +8,6 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
-// is this unecessary?
-const Book = require('./Book.js');
 
 let sequelize;
 if (config.use_env_variable) {

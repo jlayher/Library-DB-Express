@@ -24,7 +24,6 @@ router.get('/', asyncHandler(async (req, res, next) => {
   res.redirect('/books');
 }));
 
-//Exceeds Requirement:  Search 
 /* GET books page with search results */
 router.get('/books', asyncHandler(async (req, res, next) => {
   const search = req.query.search;
@@ -74,10 +73,10 @@ router.get('/books', asyncHandler(async (req, res, next) => {
   pageCount = Math.ceil(bookCount / 5);
   
   //logs
-  console.log(search);
-  console.log(bookCount);
-  console.log(pageCount);
-  console.log(page);
+  // console.log(search);
+  // console.log(bookCount);
+  // console.log(pageCount);
+  // console.log(page);
 
   res.render('index', { 
     books: books.rows,
